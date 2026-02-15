@@ -6,7 +6,7 @@ export class Order {
   public orderId?: UUID;
   public customerId?: string;
   public orderItems?: OrderItem[];
-  public totalAmount?: number;
+  public totalAmount: number;
   public orderStatus?: OrderStatusEnum;
   public createdAt?: Date;
   public updatedAt?: Date;
@@ -25,13 +25,6 @@ export class Order {
 
   orderMustHaveAtLeastOneItem(): boolean {
     return (this.orderItems?.length ?? 0) > 0;
-  }
-
-  calculateTotalAmount(): number {
-    if (!this.orderItems) return 0;
-    return this.orderItems.reduce((total, item) => {
-      return total + (item.quantity ?? 0) * (item.unitPrice ?? 0);
-    }, 0);
   }
 
   cannotCancelIfDelivered(): boolean {
@@ -69,8 +62,8 @@ export class OrderBuilder {
     return this;
   }
 
-  setTotalAmount(totalAmount: number): OrderBuilder {
-    this.totalAmount = totalAmount;
+  setTotalAmount(): OrderBuilder {
+    this.totalAmount = this.calculateTotalAmount();
     return this;
   }
 
@@ -87,6 +80,13 @@ export class OrderBuilder {
   setUpdatedAt(updatedAt: Date): OrderBuilder {
     this.updatedAt = updatedAt;
     return this;
+  }
+
+  calculateTotalAmount(): number {
+    if (!this.orderItems) return 0;
+    return this.orderItems.reduce((total, item) => {
+      return total + (item.quantity ?? 0) * (item.unitPrice ?? 0);
+    }, 0);
   }
 
   build(): Order {

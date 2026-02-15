@@ -1,25 +1,14 @@
 export class OrderItem {
-  public productId?: string;
-  public productName?: string;
-  public quantity?: number;
-  public unitPrice?: number;
+  public productId: string;
+  public productName: string;
+  public quantity: number;
+  public unitPrice: number;
 
   constructor(builder: OrderItemBuilder) {
     this.productId = builder.productId ?? '';
     this.productName = builder.productName ?? '';
     this.quantity = builder.quantity ?? 0;
     this.unitPrice = builder.unitPrice ?? 0;
-  }
-
-  //business logic here
-  checkQuantityMustBePositive(): boolean {
-    if (!this.quantity) return true;
-    return (this.quantity ?? 0) > 0;
-  }
-
-  checkUnitPriceMustBePositive(): boolean {
-    if (!this.unitPrice) return true;
-    return (this.unitPrice ?? 0) > 0;
   }
 }
 
@@ -40,13 +29,30 @@ export class OrderItemBuilder {
   }
 
   setQuantity(quantity: number): OrderItemBuilder {
+    if (!this.checkQuantityMustBePositive()) {
+      throw new Error('Quantity must be positive');
+    }
     this.quantity = quantity;
     return this;
   }
 
   setUnitPrice(unitPrice: number): OrderItemBuilder {
+    if (!this.checkUnitPriceMustBePositive()) {
+      throw new Error('Unit price must be positive');
+    }
     this.unitPrice = unitPrice;
     return this;
+  }
+
+  //business logic here
+  checkQuantityMustBePositive(): boolean {
+    if (!this.quantity) return true;
+    return (this.quantity ?? 0) > 0;
+  }
+
+  checkUnitPriceMustBePositive(): boolean {
+    if (!this.unitPrice) return true;
+    return (this.unitPrice ?? 0) > 0;
   }
 
   build(): OrderItem {
