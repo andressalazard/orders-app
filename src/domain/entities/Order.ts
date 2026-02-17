@@ -5,7 +5,7 @@ import { OrderStatusEnum } from '../enums/OrderStatusEnum';
 export class Order {
   public orderId?: UUID;
   public customerId?: string;
-  public orderItems?: OrderItem[];
+  public orderItems: OrderItem[];
   public totalAmount: number;
   public orderStatus?: OrderStatusEnum;
   public createdAt?: Date;

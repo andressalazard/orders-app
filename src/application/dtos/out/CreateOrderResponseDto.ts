@@ -2,7 +2,8 @@ export class CreateOrderResponseDto {
   orderId!: string;
   customerId!: string;
   orderItems!: {
-    productId?: string;
+    productId: string;
+    productName: string;
     quantity: number;
     unitPrice: number;
   }[];

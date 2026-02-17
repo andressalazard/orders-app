@@ -10,17 +10,30 @@ export class CreateOrderUseCase {
 
   async execute(input: CreateOrderInputDto): Promise<CreateOrderResponseDto> {
     const orderItems = input.orderItems.map((item) =>
-      new OrderItemBuilder().setProductId(item.productId).setQuantity(item.quantity).setUnitPrice(item.unitPrice).build(),
+      new OrderItemBuilder()
+        .setProductId(item.productId)
+        .setProductName(item.productName)
+        .setQuantity(item.quantity)
+        .setUnitPrice(item.unitPrice)
+        .build(),
     );
 
-    const order = new OrderBuilder().setCustomerId(input.customerId).setOrderItems(orderItems).build();
+    const order = new OrderBuilder()
+        .setCustomerId(input.customerId)
+        .setOrderItems(orderItems)
+        .build();
 
     await this.orderRepository.createOrder(order);
 
     return new CreateOrderResponseDto({
       orderId: order.orderId!,
       customerId: order.customerId!,
-      orderItems: order.orderItems!.map(OrderItemMapper.toDto),
+      orderItems: order.orderItems!.map(item => ({
+        productId: item.productId!,
+        productName: item.productName!,
+        quantity: item.quantity!,
+        unitPrice: item.unitPrice!,
+      })),
       totalAmount: order.totalAmount!,
       orderStatus: order.orderStatus!,
       createdAt: order.createdAt!,
